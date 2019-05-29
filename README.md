@@ -1,81 +1,79 @@
-# Standford CS231n 2017 Summary
+# 2017斯坦福CS231n课程总结
 
-After watching all the videos of the famous Standford's [CS231n](http://cs231n.stanford.edu/) course that took place in 2017, i decided to take summary of the whole course to help me to remember and to anyone who would like to know about it. I've skipped some contents in some lectures as it wasn't important to me.
+在学习完2017年的斯坦福[CS231n](http://cs231n.stanford.edu/)视频课程之后，我决定对整个课程做一个总结来帮助自己记忆，同时也为了任何想要了解课程的同学。这份总结跳过了一些对我来说不太重要的内容。
 
-## Table of contents
+## 目录
+* [2017斯坦福CS231n课程总结](#2017斯坦福CS231n课程总结)
+   * [目录](#目录)
+   * [课程信息](#课程信息)
+   * [01. 面向视觉识别的CNN简介](#01-面向视觉识别的CNN简介)
+   * [02. 图像分类](#02-图像分类)
+   * [03. 损失函数和优化](#03-loss-function-and-optimization)
+   * [04. 神经网络简介](#04-introduction-to-neural-network)
+   * [05. 卷积神经网络（CNN）](#05-convolutional-neural-networks-cnns)
+   * [06. 训练神经网络I](#06-training-neural-networks-i)
+   * [07. 训练神经网络II](#07-training-neural-networks-ii)
+   * [08. 深度学习软件](#08-deep-learning-software)
+   * [09. CNN架构](#09-cnn-architectures)
+   * [10. 递归神经网络（RNN）](#10-recurrent-neural-networks)
+   * [11. 检测和分割](#11-detection-and-segmentation)
+   * [12. 可视化和理解](#12-visualizing-and-understanding)
+   * [13. 生成模型](#13-generative-models)
+   * [14. 深层强化学习](#14-deep-reinforcement-learning)
+   * [15. 深度学习的有效方法和硬件](#15-efficient-methods-and-hardware-for-deep-learning)
+   * [16. 对抗性实例和对抗性训练](#16-adversarial-examples-and-adversarial-training)
 
-* [Standford CS231n 2017 Summary](#standford-cs231n-2017-summary)
-   * [Table of contents](#table-of-contents)
-   * [Course Info](#course-info)
-   * [01. Introduction to CNN for visual recognition](#01-introduction-to-cnn-for-visual-recognition)
-   * [02. Image classification](#02-image-classification)
-   * [03. Loss function and optimization](#03-loss-function-and-optimization)
-   * [04. Introduction to Neural network](#04-introduction-to-neural-network)
-   * [05. Convolutional neural networks (CNNs)](#05-convolutional-neural-networks-cnns)
-   * [06. Training neural networks I](#06-training-neural-networks-i)
-   * [07. Training neural networks II](#07-training-neural-networks-ii)
-   * [08. Deep learning software](#08-deep-learning-software)
-   * [09. CNN architectures](#09-cnn-architectures)
-   * [10. Recurrent Neural networks](#10-recurrent-neural-networks)
-   * [11. Detection and Segmentation](#11-detection-and-segmentation)
-   * [12. Visualizing and Understanding](#12-visualizing-and-understanding)
-   * [13. Generative models](#13-generative-models)
-   * [14. Deep reinforcement learning](#14-deep-reinforcement-learning)
-   * [15. Efficient Methods and Hardware for Deep Learning](#15-efficient-methods-and-hardware-for-deep-learning)
-   * [16. Adversarial Examples and Adversarial Training](#16-adversarial-examples-and-adversarial-training)
+## 课程信息
 
-## Course Info
+- 网站： http://cs231n.stanford.edu/
 
-- Website: http://cs231n.stanford.edu/
+- 课程链接： https://www.youtube.com/playlist?list=PLC1qU-LWwrF64f4QKQT-Vg5Wr4qEE1Zxk
 
-- Lectures link: https://www.youtube.com/playlist?list=PLC1qU-LWwrF64f4QKQT-Vg5Wr4qEE1Zxk
+- 教学大纲链接： http://cs231n.stanford.edu/syllabus.html
 
-- Full syllabus link: http://cs231n.stanford.edu/syllabus.html
+- 作业解决方案： https://github.com/Burton2000/CS231n-2017
 
-- Assignments solutions: https://github.com/Burton2000/CS231n-2017
+- 课时数量: **16**
 
-- Number of lectures: **16**
-
-- Course description:
-
-  - > Computer Vision has become ubiquitous in our society, with applications in search, image understanding, apps, mapping, medicine, drones, and self-driving cars. Core to many of these applications are visual recognition tasks such as image classification, localization and detection. Recent developments in neural network (aka “deep learning”) approaches have greatly advanced the performance of these state-of-the-art visual recognition systems. This course is a deep dive into details of the deep learning architectures with a focus on learning end-to-end models for these tasks, particularly image classification. During the 10-week course, students will learn to implement, train and debug their own neural networks and gain a detailed understanding of cutting-edge research in computer vision. The final assignment will involve training a multi-million parameter convolutional neural network and applying it on the largest image classification dataset (ImageNet). We will focus on teaching how to set up the problem of image recognition, the learning algorithms (e.g. backpropagation), practical engineering tricks for training and fine-tuning the networks and guide the students through hands-on assignments and a final course project. Much of the background and materials of this course will be drawn from the [ImageNet Challenge](http://image-net.org/challenges/LSVRC/2014/index).
+- 课程描述：
+  - > 计算机视觉已经在我们的社会中无处不在，应用于搜索，图像理解，应用程序，地图，医学，无人机和自动驾驶汽车。许多这些应用程序的核心是视觉识别任务，例如图像分类，定位和检测。神经网络（又名“深度学习”）方法的快速发展极大地提高了这些最先进的视觉识别系统的性能。本课程深入探讨深度学习架构的细节，重点是学习这些任务的端到端模型，尤其是图像分类。在为期10周的课程中，学生将学习如何实施，训练和调试他们自己的神经网络，并详细了解计算机视觉的前沿研究。最终任务将涉及训练数百万参数卷积神经网络并将其应用于最大图像分类数据集（ImageNet）。我们将重点教授如何设置图像识别问题，学习算法（例如反向传播），训练和微调网络的实用工程技巧，并指导学生完成动手作业和最终课程项目。本课程的大部分背景和材料都来自于 用于培训和微调网络的实用工程技巧，并指导学生完成实践任务和最终课程项目。本课程的大部分背景和材料都来自于ImageNet挑战赛(http://image-net.org/challenges/LSVRC/2014/index)。
 
 
+## 01. 面向视觉识别的CNN简介
 
-## 01. Introduction to CNN for visual recognition
-
-- A brief history of Computer vision starting from the late 1960s to 2017.
-- Computer vision problems includes image classification, object localization, object detection, and scene understanding.
-- [Imagenet](http://www.image-net.org/) is one of the biggest datasets in image classification available right now.
-- Starting 2012 in the Imagenet competition, CNN (Convolutional neural networks) is always winning.
-- CNN actually has been invented in 1997 by [Yann Lecun](http://ieeexplore.ieee.org/document/726791/).
-
+- 从20世纪60年代末到2017年的计算机视觉简史。
+- 计算机视觉问题包括图像分类，对象定位，对象检测和场景理解。
+- [Imagenet](http://www.image-net.org/)是目前可用的图像分类中最大的数据集之一。
+- 从2012年的Imagenet竞赛开始，CNN（卷积神经网络）总是获胜。
+- CNN实际上是由[Yann Lecun](http://ieeexplore.ieee.org/document/726791/)于1997年发明的。
 
 
-## 02. Image classification
+## 02. 图像分类
 
-- Image classification problem has a lot of challenges like illumination and viewpoints.
+- 图像分类问题有许多挑战，如光照和视点。
   - ![](Images/39.jpeg)
-- An image classification algorithm can be solved with **K nearest neighborhood** (KNN) but it can poorly solve the problem. The properties of KNN are:
-  - Hyperparameters of KNN are: k and the distance measure
-  - K is the number of neighbors we are comparing to.
-  - Distance measures include:
-    - L2 distance (Euclidean distance)
-      - Best for non coordinate points
-    - L1 distance (Manhattan distance)
-      - Best for coordinate points
-- Hyperparameters can be optimized using Cross-validation as following (In our case we are trying tp predict K):
-  1. Split your dataset into `f` folds.
-  2. Given predicted hyperparameters:
-     - Train your algorithm with f-1 folds and test it with the remain flood. and repeat this with every fold.
-  3. Choose the hyperparameters that gives the best training values (Average over all folds)
-- **Linear SVM** classifier is an option for solving the image classification problem, but the curse of dimensions makes it stop improving at some point.
-- **Logistic regression** is a also a solution for image classification problem, but image classification problem is non linear!
-- Linear classifiers has to run the following equation: `Y = wX + b` 
-  - shape of `w` is the same as `x` and shape of `b` is 1.
-- We can add 1 to X vector and remove the bias so that: `Y = wX`
-  - shape of `x` is `oldX+1` and `w` is the same as `x`
-- We need to know how can we get `w`'s and `b`'s that makes the classifier runs at best.
+- 图像分类算法可以用**K近邻** (KNN)求解，但它可能很难真正解决问题。KNN的特性是：
+  - KNN的超参数：K和距离度量
+  - K是要比较的邻居数量
+  - 距离度量包括：
+    - L2距离（欧式距离）
+      - 适合非坐标点
+    - L1距离（曼哈顿距离）
+      - 适合坐标点
+- 超参数可以使用交叉验证进行优化，如下所示（在我们的例子中，我们尝试预测K）：
+  1. 将数据集拆分为`f`折
+  2. 给定预测的超参数：
+     - 用f-1折训练你的算法并用剩余1折数据进行测试。每折数据重复此操作。
+  3. 选择提供最佳训练值的超参数（所有折的平均值）
+线性SVM
+
+- **线性SVM**分类器是解决图像分类问题的一种选择，但维度灾难使其在某些时候停止优化。
+- **逻辑回归**也是图像分类照片问题的解决方案，但图像分类问题是非线性的！
+- 线性分类器必须遵循以下等式：  `Y = wX + b` 
+  - `w`与`x`形状相同，`b`形状为1.
+- 可以通过对`X`向量加1来移除偏差`b`,使得: `Y = wX`
+  - `x`形状是`oldX+1`，`w`形状与`x`相同
+- 我们需要得到使得分类器结果最佳的`w`和`b`参数.
 
 
 
