@@ -8,7 +8,7 @@
    * [课程信息](#课程信息)
    * [01. 面向视觉识别的CNN简介](#01-面向视觉识别的CNN简介)
    * [02. 图像分类](#02-图像分类)
-   * [03. 损失函数和优化](#03-loss-function-and-optimization)
+   * [03. 损失函数和优化](#03-损失函数和优化)
    * [04. 神经网络简介](#04-introduction-to-neural-network)
    * [05. 卷积神经网络（CNN）](#05-convolutional-neural-networks-cnns)
    * [06. 训练神经网络I](#06-training-neural-networks-i)
@@ -77,110 +77,99 @@
 
 
 
-## 03. Loss function and optimization
+## 03. 损失函数和优化
 
-- In the last section we talked about linear classifier but we didn't discussed how we could **train** the parameters of that model to get best `w`'s and `b`'s.
+- 在上一节我们讨论了线性分类器，但我们没有讨论如何**训练**该模型的参数以获得最佳`w`和`b`。
 
-- We need a loss function to measure how good or bad our current parameters.
+- 我们需要一个损失函数来衡量我们当前参数的好坏。
 
-  - ```python
-    Loss = L[i] =(f(X[i],W),Y[i])
-    Loss_for_all = 1/N * Sum(Li(f(X[i],W),Y[i]))      # Indicates the average
-    ```
+  - ![](https://latex.codecogs.com/gif.latex?L%3D%5Cfrac%7B1%7D%7BN%7D%20%5Csum_%7Bi%7D%20L_%7Bi%7D%5Cleft%28f%5Cleft%28x_%7Bi%7D%2C%20W%5Cright%29%2C%20y_%7Bi%7D%5Cright%29)
 
-- Then we find a way to minimize the loss function given some parameters. This is called **optimization**.
+- 然后我们找到一种方法来给出一些参数来最小化损失函数。这称为**优化**。
 
-- Loss function for a linear **SVM** classifier:
+- 线性**SVM**分类器的损失函数：
 
-  - `L[i] = Sum where all classes except the predicted class (max(0, s[j] - s[y[i]] + 1))`
-  - We call this ***the hinge loss***.
-  - Loss function means we are happy if the best prediction are the same as the true value other wise we give an error with 1 margin.
-  - Example:
+  - ![](https://latex.codecogs.com/gif.latex?L_%7Bi%7D%3D%5Csum_%7Bj%20%5Cneq%20y_%7Bi%7D%7D%20%5Cmax%20%5Cleft%280%2C%20s_%7Bj%7D-s_%7By_%7Bi%7D%7D&plus;1%5Cright%29)
+  - 我们称之为 ***折页损失***.
+  - 损失函数意味着如果最佳预测与真实值相同，那么我们很满意这个结果，否则就给出1的误差。
+  - 例:
     - ![](Images/40.jpg)
-    - Given this example we want to compute the loss of this image.
+    - 在这个例子中，我们想要计算这个图像的损失值。
     - `L = max (0, 437.9 - (-96.8) + 1) + max(0, 61.95 - (-96.8) + 1) = max(0, 535.7) + max(0, 159.75) = 695.45`
-    - Final loss is 695.45 which is big and reflects that the cat score needs to be the best over all classes as its the lowest value now. We need to minimize that loss.
-  - Its OK for the margin to be 1. But its a hyperparameter too.
+    - 最终损失是695.45，数值较大。猫的得分需要是所有类别中最好的，然而现在是最小值，因而我们需要尽量减少这种损失。
+  - 这里可以使用1的边际，但它也可以是一个超参数。
 
-- If your loss function gives you zero, are this value is the same value for your parameter? No there are a lot of parameters that can give you best score.
+- 如果1个W能使Loss为0，那么还有其他参数可以使其为0。
+- 你有时会听到平方折页损失SVM（L2-SVM）,这会更强烈地惩罚margin（平方而非线性）。非平方版本更常用，但在某些数据集中，平方折页损失可以更好地工作。
 
-- You’ll sometimes hear about people instead using the squared hinge loss SVM (or L2-SVM). that penalizes violated margins more strongly (quadratically instead of linearly). The unsquared version is more standard, but in some datasets the squared hinge loss can work better.
+- 我们为损失函数添加**正则化**，以便发现的模型不会过度拟合数据。
 
-- We add **regularization** for the loss function so that the discovered model don't overfit the data.
+  - ![](https://latex.codecogs.com/gif.latex?L%28W%29%3D%5Cfrac%7B1%7D%7BN%7D%20%5Csum_%7Bi%3D1%7D%5E%7BN%7D%20L_%7Bi%7D%5Cleft%28f%5Cleft%28x_%7Bi%7D%2C%20W%5Cright%29%2C%20y_%7Bi%7D%5Cright%29&plus;%5Clambda%20R%28W%29)
+  - 其中`R`是正则项,`lambda` 是正则项系数.
 
-  - ```python
-    Loss = L = 1/N * Sum(Li(f(X[i],W),Y[i])) + lambda * R(W)
-    ```
+- 不同的正则化方式：
 
-  - Where `R` is the regularizer, and `lambda` is the regularization term.
-
-- There are different regularizations techniques:
-
-  - | Regularizer           | Equation                            | Comments               |
+  - | 正则项           | 方程                            | 说明               |
     | --------------------- | ----------------------------------- | ---------------------- |
-    | L2                    | `R(W) = Sum(W^2)`                   | Sum all the W squared  |
-    | L1                    | `R(W) = Sum(lWl)`                   | Sum of all Ws with abs |
+    | L2                    | `R(W) = Sum(W^2)`                   | W平方和  |
+    | L1                    | `R(W) = Sum(lWl)`                   | W绝对值的和 |
     | Elastic net (L1 + L2) | `R(W) = beta * Sum(W^2) + Sum(lWl)` |                        |
     | Dropout               |                                     | No Equation            |
 
-- Regularization prefers smaller `W`s over big `W`s.
+- 正规化倾向于更小的W而不是更大的W。
 
-- Regularizations is called weight decay. biases should not included in regularization.
+- 正则化又被成为权重衰减。偏执项不包含在正则化之中。
 
-- Softmax loss (Like linear regression but works for more than 2 classes):
+- Softmax损失(类似于线性回归但是适用于2个以上的分类问题):
 
-  - Softmax function:
+  - Softmax 方程:
 
-    - ```python
-      A[L] = e^(score[L]) / sum(e^(score[L]), NoOfClasses)
-      ```
+    - ![](https://latex.codecogs.com/gif.latex?P%5Cleft%28Y%3Dk%20%7C%20X%3Dx_%7Bi%7D%5Cright%29%3D%5Cfrac%7Be%5E%7Bs_%7Bk%7D%7D%7D%7B%5Csum_%7Bj%7D%20e%5E%7Bs_%7Bj%7D%7D%7D)
 
-  - Sum of the vector should be 1.
+  - 向量的和必为1.
 
-  - Softmax loss:
+  - Softmax 损失函数:
 
-    - ```python
-      Loss = -logP(Y = y[i]|X = x[i])
-      ```
+    - ![](https://latex.codecogs.com/gif.latex?L_%7Bi%7D%3D-%5Clog%20%5Cleft%28%5Cfrac%7Be%5E%7Bs%20y_%7Bi%7D%7D%7D%7B%5Csum_%7Bj%7D%20e%5E%7Bs_%7Bj%7D%7D%7D%5Cright%29)
 
-    - Log of the probability of the good class. We want it to be near 1 thats why we added a minus.
+    - 正确分类的概率取log, 添加负号是为了使这个值接近1。
 
-    - Softmax loss is called cross-entropy loss.
+    - Softmax 损失函数又称为交叉熵损失。
 
-  - Consider this numerical problem when you are computing Softmax:
+  - 在计算Softmax时，请考虑这个数值问题：
 
     - ```python
-      f = np.array([123, 456, 789]) # example with 3 classes and each having large scores
-      p = np.exp(f) / np.sum(np.exp(f)) # Bad: Numeric problem, potential blowup
+      f = np.array([123, 456, 789])       # 3类，每个类有较大的得分
+      p = np.exp(f) / np.sum(np.exp(f))   # 数值问题，超出表示范围
 
-      # instead: first shift the values of f so that the highest number is 0:
-      f -= np.max(f) # f becomes [-666, -333, 0]
-      p = np.exp(f) / np.sum(np.exp(f)) # safe to do, gives the correct answer
+      # 替代方法：将每个值减去最大的值
+      f -= np.max(f)                      # f = [-666, -333, 0]
+      p = np.exp(f) / np.sum(np.exp(f))   # 安全，得到正确结果
       ```
 
-- **Optimization**:
+- **优化**:
 
-  - How we can optimize loss functions we discussed?
-  - Strategy one:
-    - Get a random parameters and try all of them on the loss and get the best loss. But its a bad idea.
-  - Strategy two:
-    - Follow the slope.
+  - 我们如何优化我们讨论的损失函数?
+  - 策略一:
+    - 获取随机参数并尝试所有这些参数并获得最佳损失。但这是一个坏主意。
+  - 策略二:
+    - 沿着斜率方向
       - ![](Images/41.png)
-      - Image [source](https://rasbt.github.io/mlxtend/user_guide/general_concepts/gradient-optimization_files/ball.png).
+      - 图像 [来源](https://rasbt.github.io/mlxtend/user_guide/general_concepts/gradient-optimization_files/ball.png).
 
-    - Our goal is to compute the gradient of each parameter we have.
-      - **Numerical gradient**: Approximate, slow, easy to write.   (But its useful in debugging.)
-      - **Analytic gradient**: Exact, Fast, Error-prone.   (Always used in practice)
+    - 我们的目标是计算每个参数的梯度
+      - **数值梯度**: 近似，慢，易写。（调试中有用来作梯度检查）
+      - **分析梯度**: 精确，快速，容易出错。（经常在实践中使用）
 
-    - After we compute the gradient of our parameters, we compute the gradient descent:
+    - 在计算完参数的梯度之后，我们计算梯度下降：
       - ```python
         W = W - learning_rate * W_grad
         ```
 
-    - learning_rate is so important hyper parameter you should get the best value of it first of all the hyperparameters.
+    - 学习率是最重要的超参数，你需要首先得到它的最佳值
 
-    - stochastic gradient descent:
-      - Instead of using all the date, use a mini batch of examples (32/64/128 are commonly used) for faster results.
+    - 随机梯度下降：
+      - 不使用所有数据，而是使用小批量数据（通常为32/64/128）以更快的获得结果。
 
 
 

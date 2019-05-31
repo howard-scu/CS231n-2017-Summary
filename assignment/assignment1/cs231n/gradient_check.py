@@ -6,18 +6,18 @@ from random import randrange
 
 def eval_numerical_gradient(f, x, verbose=True, h=0.00001):
   """ 
-  a naive implementation of numerical gradient of f at x 
-  - f should be a function that takes a single argument
-  - x is the point (numpy array) to evaluate the gradient at
+  数值梯度 f 对 x 求导的简单实现
+  - f 为只包含一个参数的函数
+  - x 计算梯度的点
   """ 
 
-  fx = f(x) # evaluate function value at original point
+  fx = f(x) # 计算 x 处的函数值
   grad = np.zeros_like(x)
-  # iterate over all indexes in x
+  # 迭代x中所有维度
   it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
   while not it.finished:
 
-    # evaluate function at x+h
+    # 计算 x+h 处的函数值 
     ix = it.multi_index
     oldval = x[ix]
     x[ix] = oldval + h # increment by h
@@ -26,11 +26,11 @@ def eval_numerical_gradient(f, x, verbose=True, h=0.00001):
     fxmh = f(x) # evaluate f(x - h)
     x[ix] = oldval # restore
 
-    # compute the partial derivative with centered formula
+    # 计算偏导数
     grad[ix] = (fxph - fxmh) / (2 * h) # the slope
     if verbose:
       print(ix, grad[ix])
-    it.iternext() # step to next dimension
+    it.iternext() # 进入到下一维计算
 
   return grad
 
