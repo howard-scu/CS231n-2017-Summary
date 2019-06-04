@@ -9,7 +9,7 @@
    * [01. 面向视觉识别的CNN简介](#01-面向视觉识别的CNN简介)
    * [02. 图像分类](#02-图像分类)
    * [03. 损失函数和优化](#03-损失函数和优化)
-   * [04. 神经网络简介](#04-introduction-to-neural-network)
+   * [04. 神经网络简介](#04-神经网络简介)
    * [05. 卷积神经网络（CNN）](#05-convolutional-neural-networks-cnns)
    * [06. 训练神经网络I](#06-training-neural-networks-i)
    * [07. 训练神经网络II](#07-training-neural-networks-ii)
@@ -174,20 +174,20 @@
 
 
 
-## 04. Introduction to Neural network
+## 04. 神经网络简介
 
-- Computing the analytic gradient for arbitrary complex functions:
+- 计算任意复杂函数的分析梯度：
 
-  - What is a Computational graphs?
+  - 什么是计算图？
 
-    - Used to represent any function. with nodes.
-    - Using Computational graphs can easy lead us to use a technique that called back-propagation. Even with complex models like CNN and RNN.
+    - 通过使用节点来表示任意函数
+    - 通过使用计算图，我们可以很容易地计算**反向传播**。即使是像CNN和RNN这样的复杂模型。
 
-  - Back-propagation simple example:
+  - 反向传播简单示例:
 
-    - Suppose we have `f(x,y,z) = (x+y)z`
+    - 现有函数 `f(x,y,z) = (x+y)z`
 
-    - Then graph can be represented this way:
+    - 计算图如下表示:
 
     - ```
       X         
@@ -200,34 +200,34 @@
       Z---------/
       ```
 
-    - We made an intermediate variable `q`  to hold the values of `x+y`
+    - 引入中间变量 `q` 来表示 `x+y`
 
-    - Then we have:
+    - 那么有:
 
       - ```python
         q = (x+y)              # dq/dx = 1 , dq/dy = 1
         f = qz                 # df/dq = z , df/dz = q
         ```
 
-    - Then:
+    - 然后:
 
       - ```python
         df/dq = z
         df/dz = q
-        df/dx = df/dq * dq/dx = z * 1 = z       # Chain rule
-        df/dy = df/dq * dq/dy = z * 1 = z       # Chain rule
+        df/dx = df/dq * dq/dx = z * 1 = z       # 链式法则（Chain rule）
+        df/dy = df/dq * dq/dy = z * 1 = z       
         ```
 
-  - So in the Computational graphs, we call each operation `f`. For each `f` we calculate the local gradient before we go on back propagation and then we compute the gradients in respect of the loss function using the chain rule.
+  - 在计算图中，我们称之为每个操作`f`。对于每一个`f`，我们首先计算局部梯度，然后进行反向传播，最后根据链式法则计算关于损失函数的梯度。
 
-  - In the Computational graphs you can split each operation to as simple as you want but the nodes will be a lot. if you want the nodes to be smaller be sure that you can compute the gradient of this node.
+  - 在计算图中，你可以将每个操作`f`拆分为你想要的简单操作，但节点会多很多。如果你希望节点数量更少，请确保你可以计算此节点的梯度。
 
-  - A bigger example:
+  - 更复杂的例子:
 
     - ![](Images/01.png)
-    - Hint: the back propagation of two nodes going to one node from the back is by adding the two derivatives.
+    - 提示：由两个节点到一个节点的的反向传播通过两个导数相加来计算。
 
-  - Modularized implementation: forward/ backward API (example multiply code):
+  - 模块化实现：前向/后向API（示例乘法节点代码）：
 
     - ```python
       class MultuplyGate(object):
@@ -246,7 +246,7 @@
           return [dx, dy]
       ```
 
-  - If you look at a deep learning framework you will find it follow the Modularized implementation where each class has a definition for forward and backward. For example:
+  - 如果你看一个深度学习框架，你会发现它遵循模块化实现，其中每个类都有前向和后向的定义。例如：
 
     - Multiplication
     - Max
@@ -255,15 +255,15 @@
     - Sigmoid
     - Convolution
 
-- So to define neural network as a function:
+- 神经网络定义函数：
 
-  - (Before) Linear score function: `f = Wx`
-  - (Now) 2-layer neural network:    `f = W2*max(0,W1*x)` 
-    - Where max is the RELU non linear function
-  - (Now) 3-layer neural network:    `f = W3*max(0,W2*max(0,W1*x)`
-  - And so on..
+  - 线性函数: `f = Wx`
+  - 2层神经网络:    `f = W2*max(0,W1*x)` 
+    - 其中max是RELU非线性函数
+  - 3层神经网络:    `f = W3*max(0,W2*max(0,W1*x)`
+  - 其他
 
-- Neural networks is a stack of some simple operation that forms complex operations.
+- 神经网络是由一堆简单操作复合而成的复杂操作。
 
 
 
